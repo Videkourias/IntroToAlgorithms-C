@@ -1,0 +1,284 @@
+Script started on Tue 05 Feb 2019 04:22:07 PM EST
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ cat lab03_1.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 02/03/19
+Purpose: Help practice working with pointers
+*/
+#include<stdio.h>
+
+int main(){
+	int a = 7;
+	int *aPtr;
+	aPtr = &a;
+
+	//This statement will print the value of a, 7
+	printf("stat 01: %d \n", a);
+
+	//This statement will print the location of a in memory
+	printf("stat 02: %p \n", &a);
+
+	//This statement will print the location of a in memory
+	printf("stat 03: %p \n", aPtr);
+
+	//This statement will print the location of aPtr in memory
+	printf("stat 04: %p \n", &aPtr);
+
+	//This statement will print the value of a, 7
+	printf("stat 05: %d \n", a);
+
+	//This statement will print the value of a, 7
+	printf("stat 06: %d \n", *aPtr);
+
+	//This statement will print the location of a in memory
+	printf("stat 07: %p \n", *&aPtr);
+
+	//This statement will print the location of a in memory
+	printf("stat 08: %p \n", &*aPtr);
+
+	//This statement will print the value of a, 7
+	printf("stat 09: %d \n", *&a);
+
+
+	return 0;
+}
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ cc lab03_1.c
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ ./a.out
+stat 01: 7 
+stat 02: 0x7ffec3e0eaac 
+stat 03: 0x7ffec3e0eaac 
+stat 04: 0x7ffec3e0eaa0 
+stat 05: 7 
+stat 06: 7 
+stat 07: 0x7ffec3e0eaac 
+stat 08: 0x7ffec3e0eaac 
+stat 09: 7 
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ cat lab03_2.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 02/03/19
+Purpose: To help practice working with pointers
+*/
+
+#include<stdio.h>
+
+int main(){
+	float b = 3.7f;
+	float * bPtr;
+
+	//This statement will print the value of b, 3.700000
+	printf("stat 01: value of b = %f \n", b);
+
+	//This statement will print the unsigned int presentation of the adress
+	//that bPtr is pointing at in memory(0 as it points at nothing)
+	printf("stat 02: %u \n", bPtr);
+
+	//let bPtr point to the address of variable b in memory
+	bPtr = &b;
+
+	//Write down the value you will get from this print statement, call it var1 
+	printf("stat 03: %u \n", bPtr); //Gives memory adress of b in integer form
+
+	//this statement will print the memory address of b in integer form
+	printf("stat 04: %u \n", &b); 
+
+	printf("stat 05: currently bPtr stores the address of variable b which is %u in unsigned int format or %p in hexadecimal format \n", bPtr, bPtr); //Will print the same integer as before along with its hexadecimal equivalent
+
+	//this statement will print the size of a float variable in memory, 4 bytes
+	printf("stat 06: the size of b in memory is %d \n", sizeof(b));
+
+
+	//this statement is going to increment the address stored in bPtr
+	bPtr++;
+
+	//Write down the value you will get from this print statement, call it var2
+	printf("stat 07: %u \n", bPtr); //Will print the previous integer memory address plus four
+
+
+	//Q3: var2 - var1 is the difference between one memory address and the address before it, given that the previous address is for a float of size 4 btyes, then difference between var2 and var1 is 4 bytes
+	//as represented by the address' integer values having a difference of 4
+
+	return 0;
+}
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ cc lab03_2.c
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ ./a.out
+stat 01: value of b = 3.700000 
+stat 02: 0 
+stat 03: 588049780 
+stat 04: 588049780 
+stat 05: currently bPtr stores the address of variable b which is 588049780 in unsigned int format or 0x7fff230ced74 in hexadecimal format 
+stat 06: the size of b in memory is 4 
+stat 07: 588049784 
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ cat lab03_3.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 02/03/19
+Purpose: Help practice working with pointers
+*/
+
+#include<stdio.h>
+
+
+/*
+PrintArray: Prints every value and memory address in order
+Input: An integer array and an integer for the size of that array
+Output: Prints the contents of the array, with memory addresses
+*/
+void PrintArray(int size, int array[]);
+void PrintArray(int size, int array[]){
+	int i; //Iterator
+	for(i = 0; i < size; i++){
+		printf("array[%d] = %d, %p\n", i, array[i], &array[i]); //Prints every value of array, along with address
+	}
+}
+
+
+
+/*
+swap: Swaps the values two pointer variables are pointed at
+Input: 2 integer pointer values
+Output: No output, swaps existing values
+*/
+void swap(int *var1, int *var2);
+void swap(int *var1, int *var2){
+	int temp; //Declares a temporary storage variable
+
+	temp = *var1; //Swaps the values of what var1 and var2 point to
+	*var1 = *var2;
+	*var2 = temp;
+}
+
+
+/*
+SelectionSort: Sorts an array using selection sort
+Input: An integer array and an integer for the size of that array
+Output: No output, changes the order of the given array
+*/
+void SelectionSort(int size, int array[]);
+void SelectionSort(int size, int array[]){
+	int i; //Iterators
+	int j;
+	int k; //Index value
+
+	//Progressively sorts smaller lists as i gets larger
+	for(i = 0; i < size - 1; i++){
+	k = i; //Minimum element in unsorted array
+
+		for(j = i + 1; j < size; j++){
+			if(array[k] > array[j]){
+				k = j;
+			}
+		}
+	swap(&array[k], &array[i]);
+	}
+}
+
+
+
+
+
+/*
+ArrayInfo: Provides various stats about the passed array
+Input: An integer array
+Output: No output, changes the value of various addresses
+*/
+void ArrayInfo(int *ptr2Array);
+void ArrayInfo(int *ptr2Array){
+	int i; //Iterator
+	int sum = 0; //The sum of the numbers
+	int info[4]; //Array that contains the output information
+	
+	int *start = ptr2Array; //Sets a pointer variable to the same value as the start of array pointer
+	
+
+//	for(i = 0; i < size; i++){
+//		sum += *ptr2Array;
+//		ptr2Array++;
+//	}
+	
+
+}
+
+
+
+/*
+ReverseArray: Reverses the elements of an array
+Input: An integer array and an integer the size of that array
+Output: No output, changes order of given array
+*/
+void ReverseArray(int size, int *ptr2Array);
+void ReverseArray(int size, int *ptr2Array){
+	int i; //Iterator for for loop
+	int temp[size]; //Temporary array of matching size to hold list while copying
+	int *start = ptr2Array;	
+
+
+	for(i = 0; i < size; i++){
+		temp[i] = *ptr2Array;
+		ptr2Array++;
+	}
+
+	ptr2Array = start;
+
+	for(i = size-1; i >= 0; i--){
+		*ptr2Array = temp[i];
+		ptr2Array++;
+	}
+
+}
+
+
+
+int main(){
+	int data[] = {2, 7, 8,-8, 1, 9, 3, 5};
+
+	int *arrayPtr = data; //Creates a pointer to the start of data
+
+	SelectionSort(sizeof(data)/sizeof(int), data); //Sorts an array using selection sort
+
+	PrintArray(sizeof(data)/sizeof(int), data); //Outputs array
+
+	ArrayInfo(data); //Calculates information about given array
+
+
+	printf("\n\n"); //Spacing
+
+	ReverseArray(sizeof(data)/sizeof(int), arrayPtr); //Reverses array
+	PrintArray(sizeof(data)/sizeof(int), data); //Prints the array
+
+
+
+
+
+	return 0;	
+}
+
+
+//Q2.2: Noticed that the addresses are consecutive(4 bytes appart each), meaning they're all next to each other in memory
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ cc lab03_3.c
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ ./a.out
+array[0] = -8, 0x7ffd0303a390
+array[1] = 1, 0x7ffd0303a394
+array[2] = 2, 0x7ffd0303a398
+array[3] = 3, 0x7ffd0303a39c
+array[4] = 5, 0x7ffd0303a3a0
+array[5] = 7, 0x7ffd0303a3a4
+array[6] = 8, 0x7ffd0303a3a8
+array[7] = 9, 0x7ffd0303a3ac
+
+
+array[0] = 9, 0x7ffd0303a390
+array[1] = 8, 0x7ffd0303a394
+array[2] = 7, 0x7ffd0303a398
+array[3] = 5, 0x7ffd0303a39c
+array[4] = 3, 0x7ffd0303a3a0
+array[5] = 2, 0x7ffd0303a3a4
+array[6] = 1, 0x7ffd0303a3a8
+array[7] = -8, 0x7ffd0303a3ac
+]0;willavod@ltsp-amd64-bravo: ~/cs141/lab03[01;32mwillavod@ltsp-amd64-bravo[00m:[01;34m~/cs141/lab03[00m$ exit
+exit
+
+Script done on Tue 05 Feb 2019 04:22:55 PM EST

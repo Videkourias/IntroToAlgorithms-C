@@ -1,0 +1,141 @@
+
+/*
+	Author: Dean Willavoys
+	ID: 105003751
+	Date: 01/22/19
+	Purpose: To create and implement various matrix related functions
+*/
+
+#include <stdio.h>
+#define MAX 100
+
+
+
+/*
+setMatrixData: Sets the values of a 2d array
+Input: A positive integer value for the order of a matrix and a 2d integer array(a matrix with that order)
+Output: Edits the values of the entered array, no print or return occurs
+*/
+void setMatrixData(unsigned int order, int mat[][order]);
+void setMatrixData(unsigned int order, int mat[][order]){
+   	int i; //Iterators for for loops
+	int j;
+	int userValue = 0; //Integer for user value
+	for(i = 0; i < order; i++){ //Loops through rows
+		for(j = 0; j < order; j++){ //Loops through columns
+			printf("Enter a value for entry %d,%d of the matrix: ", i + 1, j + 1);  //Gets entry i,j from user
+			scanf("%d", &userValue);
+			mat[i][j] = userValue; //Assigns entry i,j to user's entry
+		}
+	}	
+}
+
+
+
+/*
+printMatrixData: Outputs the entries of the entered 2d array in tabular form
+Input: A positive integer value for the order of a matrix and a 2d integer array(a matrix with that order)
+Output: Prints a table containing the values of the entered array
+*/
+void printMatrixData(int order, int mat[][order]);
+void printMatrixData(int order, int mat[][order]){
+	int i; //Iterators for for loops
+	int j;
+	int k;
+	for(i = 0; i < order; i++){ //Loops through rows
+		for(j = 0; j < order; j++){ //Loops through columns
+			printf("\t%d", mat[i][j]); //Prints element i,j of the entered array
+//			if(j != order - 1){ //If current column isn't final in its row, add a line for the table
+//				printf("\t|");
+//			}
+		}
+		printf("\n"); //New line for new row
+//		if(i != order - 1){ //If current row isn't last row, print a set of lines
+//			for(k = 0; k < order; k++){ //Prints a set of lines under the printed elements
+//				printf("\t-\t");
+//			}
+//		}
+//		printf("\n");
+	}
+}
+
+
+
+
+/*
+isMagicSquare: Determines whether or not the entered matrix is a magic square
+Input: A positive integer value for the number of rows and a matrix
+Output: Returns an integer value based on whether or not matrix is magic(0 for false, 1 for true) 
+*/
+int isMagicSquare(int numOfRows, int mat[][numOfRows]);
+int isMagicSquare(int numOfRows, int mat[][numOfRows]){
+	 
+	return 1; // if the matrix is a magic square
+}
+
+
+
+/*
+isDistinctSquare: Determines whether or not the entered matrix is distinct
+Input: A positive integer value for the order of a matrix and a 2d array(a matrix with that order)
+Output: Returns an integer value based on whether or not matrix is distinct(0 for false, 1 for true) 
+*/
+int isDistinctSquare(int order, int mat[][order]);
+int isDistinctSquare(int order, int mat[][order]){
+	int numSeen[] = {0,0,0,0,0,0,0,0,0,0,0}; An integer array keeping track of seen integers
+	int i; //Iterators for for loops
+	int j;
+	int entry = 0; //Stores the current entry of the matrix
+
+	for(i = 0; i < order; i++){
+		for(j = 0; j < order; j++){
+			if(numSeen[mat[i][j]] = 0 
+		}
+	}
+
+	return 1; // if the matrix has no duplicates all values are unique
+}
+
+
+
+/*
+sortRowWise: Sorts the square matrix using row-wise approach
+Input: A positive integer value for the number of rows and a matrix
+Output: Prints the matrix sorted row-wise
+*/
+void sortRowWise(int numOfRows, int mat[][numOfRows]);
+void sortRowWise(int numOfRows, int mat[][numOfRows]){
+    // provide the implementation
+}
+
+
+
+/*
+getTranspose: Calculates the transpose matrix for a square matrix
+Input: A positive integer value for the number of rows, a matrix, a second matrix with a number of rows matching the first
+Output: Prints the calculated transpose matrix
+*/
+void getTranspose(int numOfRows, int mat[][numOfRows], int tran[][numOfRows]);
+void getTranspose(int numOfRows, int mat[][numOfRows], int tran[][numOfRows]){
+    // provide the implementation
+}
+
+
+
+int main()
+{
+        int matrix[MAX][MAX]; //Initializes two arrays with arbitrary values so that they can be manipulated
+        int transpose[MAX][MAX];
+
+        unsigned int order = 0; //Initializes the order of the matrix
+	printf("Enter an order for the matrix: "); //Gets an order from the user
+	scanf("%u", &order);
+
+
+	setMatrixData(order, matrix); //Allows user to set values in the matrix
+
+	printMatrixData(order, matrix); //Outputs data of unedited matrix in tabular form
+
+	return 0;  
+}
+

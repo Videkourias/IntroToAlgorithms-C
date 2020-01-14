@@ -1,0 +1,181 @@
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 3/22/19
+Purpose: To work with linked lists
+*/
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define debug 0
+
+//A structure detailing an event and its time
+struct event{
+	int hour; //The hour of the event
+	int minute; //The minute of the event
+	char description[41]; //Description of the event
+	struct event *ptrNext; //Pointer to next event in list
+};
+
+typedef struct event Event; //Alias of struct event
+
+Event *ptrFirst = NULL; //Pointers to the beginning and end of list
+Event *ptrLast = NULL;
+
+
+//Prototypes
+void sortLinkedList(Event *first);
+void swapValues(Event *event1, Event *event2);
+void swap(Event *e1, Event *e2);
+void freeMem();
+
+
+/*
+sortLinkedList: This function recuresively sorts a linked list by using a modified version of selection sort
+Input: An Event pointer to the start point of the current linked list
+Output: Returns nothing, sorts a linked list
+*/
+void sortLinkedList(Event *first){
+	if(first->ptrNext == NULL || first == NULL){ //List exhausted
+		return;
+	}
+
+
+	//THIS SECTION FINDS THE SMALLEST TIME	
+	Event *ptr = first; //The currently viewed event in the list
+	Event *minPtr = ptr; //The smallest event in the list
+	while(ptr->ptrNext != NULL){
+		if(minPtr->hour > ptr->hour || (minPtr->hour == ptr->hour && minPtr->minute > ptr->minute)){ //If the time of the current event viewed is less than the minimum event
+			minPtr = ptr; //New min has been found
+		}
+		else{
+			if((minPtr->hour == ptr->hour && minPtr->minute == ptr->minute) && strcmp(minPtr->description,ptr->description) > 0){
+				minPtr = ptr; //Checks if two are equivalent in time, and then assigns the min based on alphabetical order
+			}
+		}
+		ptr = ptr->ptrNext;
+	}
+
+
+/* Until feof works, this stays commented
+	if(minPtr->hour > ptr->hour || (minPtr->hour == ptr->hour && minPtr->minute > ptr->minute)){ //Check for the last element of the list
+		minPtr = ptr;
+	}
+*/
+
+
+	if(debug){
+		printf("MIN EVENT: %s\n", minPtr->description);
+	}
+
+
+
+
+
+	//THIS SECTION SWAPS THE SMALLEST ELEMENT OF THE LIST WITH THE CURRENT FIRST ELEMENT
+	if(minPtr != first){ //Only sorts if there is a smaller value
+		swap(minPtr, first);
+	}
+
+	sortLinkedList(first->ptrNext); //Calls sortLinkedList with progressively smaller list
+
+}
+
+
+
+
+/*
+swap: Swaps the values of 2 Event structures (not including the self-referential pointers)
+Input: 2 Event pointers 
+Output: No print or return, changes content of structures
+*/
+void swap(Event *e1, Event *e2){
+	Event temp;
+	temp = *e1;
+
+	e1->hour = e2->hour;
+	e1->minute = e2->minute;
+	strcpy(e1->description, e2->description);
+	
+	e2->hour = temp.hour;
+	e2->minute = temp.minute;
+	strcpy(e2->description, temp.description);
+}
+
+
+
+/*
+freeMem: Frees the memory occupied by a linked list
+Input: None, uses global variables
+Output: No print or return, changes memory
+*/
+void freeMem(){
+	Event *ptrDel = NULL; //Pointer to the event about to be removed from memory 
+	
+	while(ptrFirst != NULL){ //Loops through all elements of linked list, freeing them
+		ptrDel = ptrFirst;
+		ptrFirst = ptrFirst->ptrNext;
+		free(ptrDel);
+	}
+	ptrLast = NULL; //Gets rid of hanging pointer
+}
+
+
+
+int main(){
+	FILE *fp; //Pointer to file
+	Event *newEvent = NULL; //A new event to add to the list
+
+	fp = fopen("mylist.txt", "r"); //Opening file
+
+	if(fp != NULL){ //File opened correctly
+		while(!feof(fp)){
+			newEvent = (Event *) malloc(sizeof(Event)); //Allocates memory for new event
+			fscanf(fp, "%d %d %s", &newEvent->hour, &newEvent->minute, newEvent->description); //Fills event with data
+			newEvent->ptrNext = NULL;
+
+
+			//Adds event to linked list
+			if(ptrFirst == NULL){ //Case 1: No entries currently in list
+				ptrFirst = newEvent;
+				ptrLast = ptrFirst;
+			}
+			else{ //Case 2: At least 1 element in list
+				ptrLast->ptrNext = newEvent;
+				ptrLast = newEvent;
+			}
+
+		}	
+	}
+
+
+	else{ //File opened incorrectly
+		printf("Error opening file...\n");
+	}
+
+	fclose(fp); //Closing file
+
+	sortLinkedList(ptrFirst); //Sorts current list
+
+
+	fp = fopen("mylist.txt", "w"); //Reopen file to write to
+	if(fp != NULL){
+		Event *ptr; //Iterator
+		for(ptr = ptrFirst; ptr->ptrNext != NULL; ptr = ptr->ptrNext){ //Loops through all values of the linked list
+			if(!((ptr->hour == (ptr->ptrNext)->hour) && (ptr->minute == (ptr->ptrNext)->minute) && (strcmp(ptr->description,(ptr->ptrNext)->description) == 0))){ //Checks for duplicates
+				fprintf(fp, "%d %d %s\n", ptr->hour, ptr->minute, ptr->description);// If not a duplicate, print it
+			}
+			
+		}
+		freeMem();
+	}
+	else{ //File opened incorrectly
+		printf("Error opening file...\n");
+	}
+	fclose(fp);
+
+
+
+	return 0;
+}

@@ -1,0 +1,314 @@
+Script started on Mon 11 Feb 2019 06:30:46 PM EST
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ cat lab03_1.vc[Kc[K[Kc
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 02/03/19
+Purpose: Help practice working with pointers
+*/
+#include<stdio.h>
+
+int main(){
+	int a = 7;
+	int *aPtr;
+	aPtr = &a;
+
+	//This statement will print the value of a, 7
+	printf("stat 01: %d \n", a);
+
+	//This statement will print the location of a in memory
+	printf("stat 02: %p \n", &a);
+
+	//This statement will print the location of a in memory
+	printf("stat 03: %p \n", aPtr);
+
+	//This statement will print the location of aPtr in memory
+	printf("stat 04: %p \n", &aPtr);
+
+	//This statement will print the value of a, 7
+	printf("stat 05: %d \n", a);
+
+	//This statement will print the value of a, 7
+	printf("stat 06: %d \n", *aPtr);
+
+	//This statement will print the location of a in memory
+	printf("stat 07: %p \n", *&aPtr);
+
+	//This statement will print the location of a in memory
+	printf("stat 08: %p \n", &*aPtr);
+
+	//This statement will print the value of a, 7
+	printf("stat 09: %d \n", *&a);
+
+
+	return 0;
+}
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ cc lab03_1.c
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ ./a.out
+stat 01: 7 
+stat 02: 0x7ffe90b631fc 
+stat 03: 0x7ffe90b631fc 
+stat 04: 0x7ffe90b631f0 
+stat 05: 7 
+stat 06: 7 
+stat 07: 0x7ffe90b631fc 
+stat 08: 0x7ffe90b631fc 
+stat 09: 7 
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ cat lab03_2.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 02/03/19
+Purpose: To help practice working with pointers
+*/
+
+#include<stdio.h>
+
+int main(){
+	float b = 3.7f;
+	float * bPtr;
+
+	//This statement will print the value of b, 3.700000
+	printf("stat 01: value of b = %f \n", b);
+
+	//This statement will print the unsigned int presentation of the adress
+	//that bPtr is pointing at in memory(0 as it points at nothing)
+	printf("stat 02: %u \n", bPtr);
+
+	//let bPtr point to the address of variable b in memory
+	bPtr = &b;
+
+	//Write down the value you will get from this print statement, call it var1 
+	printf("stat 03: %u \n", bPtr); //Gives memory adress of b in integer form
+
+	//this statement will print the memory address of b in integer form
+	printf("stat 04: %u \n", &b); 
+
+	printf("stat 05: currently bPtr stores the address of variable b which is %u in unsigned int format or %p in hexadecimal format \n", bPtr, bPtr); //Will print the same integer as before along with its hexadecimal equivalent
+
+	//this statement will print the size of a float variable in memory, 4 bytes
+	printf("stat 06: the size of b in memory is %d \n", sizeof(b));
+
+
+	//this statement is going to increment the address stored in bPtr
+	bPtr++;
+
+	//Write down the value you will get from this print statement, call it var2
+	printf("stat 07: %u \n", bPtr); //Will print the previous integer memory address plus four
+
+
+	//Q3: var2 - var1 is the difference between one memory address and the address before it, given that the previous address is for a float of size 4 btyes, then difference between var2 and var1 is 4 bytes
+	//as represented by the address' integer values having a difference of 4
+
+	return 0;
+}
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ cc lab03_2.c
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ ./a.out
+stat 01: value of b = 3.700000 
+stat 02: 0 
+stat 03: 1320886276 
+stat 04: 1320886276 
+stat 05: currently bPtr stores the address of variable b which is 1320886276 in unsigned int format or 0x7ffc4ebb2004 in hexadecimal format 
+stat 06: the size of b in memory is 4 
+stat 07: 1320886280 
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ cat lab03)[K_3.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 02/03/19
+Purpose: Help practice working with pointers
+*/
+
+#include<stdio.h>
+
+
+/*
+PrintArray: Prints every value and memory address in order
+Input: An integer array and an integer for the size of that array
+Output: Prints the contents of the array, with memory addresses
+*/
+void PrintArray(int size, int array[]);
+void PrintArray(int size, int array[]){
+	int i; //Iterator
+	for(i = 0; i < size; i++){
+		printf("array[%d] = %d, %p\n", i, array[i], &array[i]); //Prints every value of array, along with address
+	}
+}
+
+
+
+/*
+swap: Swaps the values two pointer variables are pointed at
+Input: 2 integer pointer values
+Output: No output, swaps existing values
+*/
+void swap(int *var1, int *var2);
+void swap(int *var1, int *var2){
+	int temp; //Declares a temporary storage variable
+
+	temp = *var1; //Swaps the values of what var1 and var2 point to
+	*var1 = *var2;
+	*var2 = temp;
+}
+
+
+/*
+SelectionSort: Sorts an array using selection sort
+Input: An integer array and an integer for the size of that array
+Output: No output, changes the order of the given array
+*/
+void SelectionSort(int size, int array[]);
+void SelectionSort(int size, int array[]){
+	int i; //Iterators
+	int j;
+	int k; //Index value
+
+	//Progressively sorts smaller lists as i gets larger
+	for(i = 0; i < size - 1; i++){
+	k = i; //Minimum element in unsorted array
+
+		for(j = i + 1; j < size; j++){
+			if(array[k] > array[j]){
+				k = j; //Checks if any element in smaller list is smaller than k, if so, k becomes the index of that element
+			}
+		}
+	swap(&array[k], &array[i]); //Swaps k and i using previously defined swap function
+	}
+}
+
+
+
+
+
+/*
+ArrayInfo: Provides various stats about the passed array
+Input: An integer array, an integer n for the size of that array, a long integer pointer for sum of array, a float pointer for the average and two integer pointers for the min and max of the array
+Output: No output, changes the value of various addresses
+*/
+void ArrayInfo(int array[], int n, long int *ptrSum, float *ptrAvg, int *ptrMin, int *ptrMax);
+void ArrayInfo(int array[], int n, long int *ptrSum, float *ptrAvg, int *ptrMin, int *ptrMax){
+	int i; //Iterator
+
+	for(i = 0; i < n; i++){
+		*ptrSum += array[i]; //Adds each element of the array to the location pointed to by the prtSum variable(sum in main)
+	}	
+	
+	*ptrAvg = (float)*ptrSum/n; //Calculates the value of the average of the array and immediately passes it to the address that ptrAvg points to(avg in main)
+
+
+	*ptrMin = array[0]; //Min and max are first element by default
+	*ptrMax = array[0];
+
+	for(i = 0; i < n; i++){ //Cycles through array
+		if(array[i] > *ptrMax){
+			*ptrMax = array[i]; //If any element is greater than the largest, that element becomes the larges(changes value of max in main)
+		}
+		else if(array[i] < *ptrMin){
+			*ptrMin = array[i]; //If any element is less than the smalles, that element becomes the smallest(changes value of min in main)
+		}
+	}
+	//Function does not need to return anything as the parameters were directly changed by the function using their memory addresses
+}
+
+
+
+/*
+ReverseArray: Reverses the elements of an array
+Input: An integer array and an integer the size of that array
+Output: No output, changes order of given array
+*/
+void ReverseArray(int size, int *ptr2Array);
+void ReverseArray(int size, int *ptr2Array){
+	int i; //Iterator for for loop
+	int temp[size]; //Temporary array of matching size to hold list while copying
+	int *start = ptr2Array;	
+
+
+	for(i = 0; i < size; i++){
+		temp[i] = *ptr2Array; //Parses passed array and copies it to a temporary array
+		ptr2Array++; //Increments location in memory
+	}
+
+	ptr2Array = start; //Resets memory to inital location(start of array)
+
+	for(i = size-1; i >= 0; i--){
+		*ptr2Array = temp[i]; //Parses the temp array in reverse and copies its contents to the passed array
+		ptr2Array++; //Increments location in memory
+	}
+
+}
+
+
+
+int main(){
+	int data[] = {2, 7, 8,-8, 1, 9, 3, 5};
+	int *ptr2Array = data; //Makes a pointer that stores the address of the array "data"
+
+	long sum = 0; //Allocates a memory location for a long representing sum and stores its address in a pointer
+	long *ptrSum = &sum; 
+
+	float avg; //Allocates a memory location for a float representing average and stores its address in a pointer
+	float *ptrAvg = &avg; 
+
+	int min; //Allocates a memory location for an int representing min and stores its address in a pointer
+	int *ptrMin = &min;
+
+	int max; //Allocates a memory location for an int representing max and stores its address in a pointer
+	int *ptrMax = &max; 
+
+
+
+	SelectionSort(sizeof(data)/sizeof(int), data); //Sorts an array using selection sort
+
+	PrintArray(sizeof(data)/sizeof(int), data); //Outputs array
+
+	ArrayInfo(data, sizeof(data)/sizeof(int), ptrSum, ptrAvg, ptrMin, ptrMax); //Calculates information about given array
+
+
+	printf("\n\n"); //Spacing
+
+	ReverseArray(sizeof(data)/sizeof(int), ptr2Array); //Reverses array
+	PrintArray(sizeof(data)/sizeof(int), data); //Prints the array
+
+
+	printf("\n\nTest to see if info from ArrayInfo is available to main...\n");
+	printf("Sum = %ld\nAverage = %.2f\nMin = %d\nMax = %d\n", sum, avg, min, max);
+
+
+
+	return 0;	
+}
+
+
+//Q2.2: Noticed that the addresses are consecutive(4 bytes appart each), meaning they're all next to each other in memory
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ cc lab03_3.c
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ ./a.out
+array[0] = -8, 0x7fffef15e630
+array[1] = 1, 0x7fffef15e634
+array[2] = 2, 0x7fffef15e638
+array[3] = 3, 0x7fffef15e63c
+array[4] = 5, 0x7fffef15e640
+array[5] = 7, 0x7fffef15e644
+array[6] = 8, 0x7fffef15e648
+array[7] = 9, 0x7fffef15e64c
+
+
+array[0] = 9, 0x7fffef15e630
+array[1] = 8, 0x7fffef15e634
+array[2] = 7, 0x7fffef15e638
+array[3] = 5, 0x7fffef15e63c
+array[4] = 3, 0x7fffef15e640
+array[5] = 2, 0x7fffef15e644
+array[6] = 1, 0x7fffef15e648
+array[7] = -8, 0x7fffef15e64c
+
+
+Test to see if info from ArrayInfo is available to main...
+Sum = 27
+Average = 3.38
+Min = -8
+Max = 9
+]0;willavod@alpha: ~/cs141/lab03[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab03[00m$ exit
+exit
+
+Script done on Mon 11 Feb 2019 06:31:57 PM EST

@@ -1,0 +1,216 @@
+
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 3/18/19
+Purpose: To work with structures and dynamic memory allocation
+*/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+//Structure for the details of a product
+typedef struct ProductDescription{
+
+	char productName[25]; //The name of the product
+	float productPrice; //The price of the product
+	float productWeight; //The weight of the prodcut
+
+} Product; //Structure alias
+
+
+//Prototypes
+void CreateProductList(Product **productList, int size);
+void ResizeProductList(Product **productList, int newSize);
+Product SetProductInfo();
+void SortProductList(Product *productList, int size, char sortOption);
+void AddProductToProductList(Product *productList, int size);
+void PrintProductList(Product *productList, int size);
+void swap(Product *product1, Product *product2);
+
+
+
+/*
+CreateProductList: Allocates enough memory to store requested number of product entries
+Input: A pointer to an array pointer and a positive integer size
+Output: No return or print, allocates memory
+*/
+void CreateProductList(Product **productList, unsigned int size){
+	*productList = (Product *)malloc(sizeof(Product) * size); //Allocates enough memory for an array of structures of size size
+}
+
+
+
+/*
+ResizeProductList: Resizes the exisiting memory allocated to fit user request
+Input: A pointer to an array pointer and a positive integer size
+Output: No return or print, allocates memory
+*/
+void ResizeProductList(Product **productList, unsigned int newSize){
+    *productList = (Product*) realloc(*productList, sizeof(Product) *  newSize); //Reallocates memory to accomodate new size
+}
+
+
+/*
+SetProductInfo: Allows user to set data for a single product
+Input: Function has no input parameters
+Output: Returns a complete product data structure
+*/
+Product SetProductInfo(){
+	Product product; //New blank structure
+	
+	printf("\nPlease Enter the Product Name: "); //Gets user input and stores them in a structure
+	scanf(" %[^\n]s", product.productName);
+
+	printf("\nPlease Enter the Product Price: ");
+	scanf(" %f", &product.productPrice);
+
+	printf("\nPlease Enter the Product Weight: ");
+	scanf(" %f", &product.productWeight);
+
+	return product;
+
+}
+
+
+void swap(Product *product1, Product *product2){
+	Product temp; //Blank tem
+
+	temp = *product1;
+	*product1 = *product2;
+	*product2 = temp;
+}
+
+
+
+/*
+SortProductList: Allows user to sort product list based on a sort option
+Input: A pointer to the product list, a positive integer size and a character for sort option
+Output: No return or print, changes values at memory addresses
+*/
+void SortProductList(Product *productList, int size, char sortOption){
+	int i;
+	int j;
+	int min;
+	switch(sortOption){
+		case 'p':
+			for(i = 0; i < size - 1; i++){
+				min = i;
+				for(j = i + 1; j < size; j++){
+					if(productList[j].productPrice < productList[min].productPrice){
+						min = j;
+					} 
+				}
+				swap(&productList[i], &productList[min]);
+			}
+			break;
+		case 'w':
+			for(i = 0; i < size - 1; i++){
+				min = i;
+				for(j = i + 1; j < size; j++){
+					if(productList[j].productWeight < productList[min].productWeight){
+						min = j;
+					} 
+				}
+				swap(&productList[i], &productList[min]);
+			}
+			break;
+
+		case 'n':
+			for(i = 0; i < size - 1; i++){
+				min = i;
+				for(j = i + 1; j < size; j++){
+					if(strcmp(productList[j].productName,  productList[min].productName) > 0){
+						min = j;
+					} 
+				}
+				swap(&productList[i], &productList[min]);
+			}
+			break;
+
+		default:
+			printf("Invalid Sort Option\n");
+			break;
+
+
+	}
+
+}
+
+
+/*
+AddProductToProductList: Allows user to create the product list
+Input: A Product array pointer and a positive integer size
+Output: No return or print, changes values at memory addresses
+*/
+void AddProductToProductList(Product *productList, int size){
+
+    for(int i=0; i< size; i++){
+
+        printf("\nPlease enter product info for product %d: \n", i);
+        *(productList+i) = SetProductInfo();
+    }
+
+}
+
+
+/*
+PrintProductList: Prints the product list to the screen
+Input: A Product array pointer and a positive integer size
+Output: Prints the data of the Products stored in productlist
+*/
+void PrintProductList(Product *productList, int size){
+
+    for(int i=0; i< size; i++){
+
+       printf("\n Product ID: %d Name: %s", i, (productList+i)->productName);
+       printf("\n Product ID: %d Price: %f", i, (productList+i)->productPrice);
+       printf("\n Product ID: %d Weight: %f", i, (productList+i)->productWeight);
+       printf("\n----------------------------------------------------------------\n");
+    }
+
+}
+
+int main() {
+
+	Product *list;
+ 	int listSize;
+ 	char sortOption;
+ 	char resize;
+	int i;
+
+
+	printf("Please Enter the size of the list: ");
+	scanf("%d", &listSize);
+
+
+
+
+   	CreateProductList(&list, listSize);
+
+	AddProductToProductList(list, listSize);
+
+	PrintProductList(list, listSize);
+
+	printf("\n\nTo sort the product list press: \n'p' to sort by price, or 'w' to sort by weight, or 'n' to sort by name  : ");
+
+	scanf(" %c", &sortOption);
+
+	SortProductList(list,listSize, sortOption);
+
+	PrintProductList(list,listSize);
+
+	printf("\n\nTo resize the product list press 'y' or any other key to escape: ");
+	scanf(" %c", &resize);
+
+	if(resize == 'y' || resize == 'Y'){
+        	printf("Please Enter the new size of the list: ");
+        	scanf("%d", &listSize);
+        	ResizeProductList(&list, listSize);
+        	PrintProductList(list, listSize);
+    	}
+
+    return 0;
+}

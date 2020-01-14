@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+
+
+
+int main(){
+	char *wordList[50];
+
+	char *sentence = "what about this";
+
+	char *p_token;
+
+
+	int i = 0;
+	p_token = strtok(sentence, " ");
+		fprintf(stderr, "WORK PIECE OF SHIT 1");
+	while(p_token != NULL){
+		strcpy(wordList[i],p_token);		
+		fprintf(stderr, "WORK PIECE OF SHIT 2");
+		i++;
+		p_token = strtok(NULL, " ");
+	}
+	fprintf(stderr, "WORK PIECE OF SHIT 3");
+
+	for(int i = 0; i < 3; i++){
+		printf("%s\n", wordList[i]);
+
+	}
+
+}

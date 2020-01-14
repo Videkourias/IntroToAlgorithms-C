@@ -1,0 +1,5 @@
+12 30 lunch_time
+14 40 class_in_Erie_Hall
+17 0 lab_in_Toldo
+22 30 bed_time
+23 59 it_works

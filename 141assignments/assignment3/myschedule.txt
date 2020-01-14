@@ -1,0 +1,5 @@
+8 20 wake_up
+9 30 eat_breakfast
+12 10 class_in_Erie_Hall
+14 50 lab_in_Toldo
+17 47 dinner_time

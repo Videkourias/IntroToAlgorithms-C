@@ -1,0 +1,218 @@
+Script started on Tue 12 Mar 2019 04:39:27 PM EDT
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ cat lab06c[K.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 3/5/19
+Purpose: To practice using structures and manipulating files
+*/
+
+#include<stdio.h>
+#include<string.h>
+#define NUM 3 //The number of employee files
+
+//Data type for the details of a given employee
+struct employee{
+	char firstname[40]; //The first name of the employee
+	char lastname[40];  //The last name of the employee
+	int id;	//The ID of the employee
+};
+typedef struct employee Employee; //Alias for the structure
+
+
+
+/*
+InputEmployeeRecord: Input the employee data interactively from the keyboard
+Input: A pointer to an employee data structure
+Output: No return or print, edits the contents of a file
+*/
+void InputEmployeeRecord(Employee *ptrEmp);
+void InputEmployeeRecord(Employee *ptrEmp){
+	char first[40]; //Employee first name
+	char last[40]; //Employee last name
+	int id; //Employee id
+
+	//Gets info from user
+	printf("Employee first name: ");
+	scanf("%s", first);
+
+	printf("Employee last name: ");
+	scanf("%s", last);
+
+	printf("Employee ID: ");
+	scanf("%d", &id);
+
+	//Changes the information of the passed employee structure
+	strcpy(ptrEmp->firstname, first);
+	strcpy(ptrEmp->lastname, last);
+	ptrEmp->id = id;
+
+}
+
+
+
+/*
+PrintEmployeeRecord: Display the contents of a given employee record
+Input: An employee data structure
+Output: Prints the information in an employee data structure 
+*/
+void PrintEmployeeRecord(const Employee e);
+void PrintEmployeeRecord(const Employee e){
+	printf("%d %s %s\n", e.id, e.firstname, e.lastname);
+}
+
+
+
+/*
+SaveEmployeeRecord: Save the contents of the employee record list to the newly created text file specified by FileName
+Input: An array of employee data structures, a file name
+Output: No return or print, creates a new file with the contents of the passed array 
+*/
+void SaveEmployeeRecord(const Employee e[], const char *FileName);
+void SaveEmployeeRecord(const Employee e[], const char *FileName){
+	int i; //Iterator for for loop
+	FILE *fp; //Pointer to file
+	fp = fopen(FileName, "w"); //Opens the file to write to
+	
+	if(fp == NULL){ //Tests if file opened correctly
+		printf("Error opening file");
+	}
+	else{
+		fprintf(fp, "ID FIRSTNAME LASTNAME\n");
+		for(i = 0; i < NUM; i++){
+			fprintf(fp, "%d %s %s\n", e[i].id, e[i].firstname, e[i].lastname); //Prints the stored employee info to file
+		}	
+		fclose(fp); //Closes file
+	}
+}
+
+void main(){
+	int i; //Iterator for for loop
+	Employee e[NUM]; //An array of 3 employee structures
+
+	for(i = 0; i < NUM; i++){ //Gets employee info and stores it
+		InputEmployeeRecord(&e[i]);
+	}
+
+	for(i = 0; i < NUM; i++){ //Outputs employee info
+		PrintEmployeeRecord(e[i]);
+	}
+
+		
+
+	SaveEmployeeRecord(e, "employee.dat");
+
+}
+
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ cat fixcap.c
+/*
+Author: Dean Willavoys
+ID: 105003751
+Date: 3/5/18
+Purpose: To practice with structures and file manipulation
+*/
+
+#include<stdio.h>
+#include<string.h>
+#include<ctype.h>
+
+
+
+//Structure that contains employee information
+struct employee{
+	char firstname[40]; //The first name of the employee
+	char lastname[40]; //The last name of the employee
+	int id;	 //The ID of the employee
+};
+typedef struct employee Employee; //Alias for structure
+
+
+
+
+/*
+WordCap: Capitalizes the first letter of the passed word
+Input: A pointer to a string
+Output: Doesn't return or print, only changes value of passed string
+*/
+void WordCap(char *word){
+	*word = toupper(*word); //Changes the first character of a string into its capitalized version
+}
+
+
+int main(){
+	int i; //Iterator for for loop
+	FILE *fp; //File pointer
+	Employee EmployeeList[3]; //Makes an array of Employee structures
+	char first[40], last[40]; //Temporary stirage to hold first and last name before they are transferred to sttuct
+	int id; //Temporary storage to hold id before it is transferred to struct
+	int entry = 0; //Keeps track of which employee record is being parsed
+	char buffer[22];
+
+	fp = fopen("employee.dat", "r"); //Opens file
+
+	if(fp == NULL){ //Tests that file opened correctly
+		printf("Error opening file\n");
+	}
+	else{
+		fgets(buffer, 22, fp);
+		while((fscanf(fp, "%d %s %s", &id, first, last) != EOF)){ //Loops while there is still employee information available 
+			EmployeeList[entry].id = id; 
+ 
+			strcpy(EmployeeList[entry].firstname, first); //Stores the first name in a structure
+			WordCap(EmployeeList[entry].firstname); //Capitalizes first name
+
+			strcpy(EmployeeList[entry].lastname, last); //Stores the last name in a structure
+			WordCap(EmployeeList[entry].lastname); //Capitalizes last name
+			entry++;
+		}
+		fclose(fp); //Closes file
+	}
+
+
+	fp = fopen("employee.dat", "w"); //Re-opens file with writing permissions 
+
+	if(fp == NULL){ //Tests that file opened correctly
+		printf("Error opening file\n");
+	}
+	else{
+		fprintf(fp, "ID FIRSTNAME LASTNAME\n");
+		for(i = 0; i < 3; i++){
+			fprintf(fp, "%d %s %s\n", EmployeeList[i].id,EmployeeList[i].firstname, EmployeeList[i].lastname); //Overwrites current data with capitalized data
+		}
+		fclose(fp); //Closes file
+	}
+
+	return 0;
+}
+
+
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ cc lab06.c
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ ./a.out][K
+Employee first name: franklin
+Employee last name: roosevelt
+Employee ID: 33
+Employee first name: john
+Employee last name: kennedy
+Employee ID: 61
+Employee first name: ronald
+Employee last name: reagan
+Employee ID: 81
+33 franklin roosevelt
+61 john kennedy
+81 ronald reagan
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ cat employee.dat
+ID FIRSTNAME LASTNAME
+33 franklin roosevelt
+61 john kennedy
+81 ronald reagan
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ cc fixcap.c
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ ./a.out
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ ./a.outcc fixcap.cat employee.dat
+ID FIRSTNAME LASTNAME
+33 Franklin Roosevelt
+61 John Kennedy
+81 Ronald Reagan
+]0;willavod@alpha: ~/cs141/lab06[01;32mwillavod@alpha[00m:[01;34m~/cs141/lab06[00m$ exit
+exit
+
+Script done on Tue 12 Mar 2019 04:40:59 PM EDT
